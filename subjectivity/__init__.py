@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup
 import re
 import requests
 
+_common_attr = set(dir(type)) | set(['__self__', '__objclass__'])
+_subjective_map = lambda x: x if isinstance(x, Subjective) else Subjective(x)
+
 
 class memoize(dict):
     def __init__(self, func):
@@ -15,10 +18,23 @@ class memoize(dict):
         return result
 
 
-class SubjectiveObject(object):
+class Subjective(object):
     def __init__(self, target):
         self.target = target
 
+        valid_attrs = set(dir(target)) - _common_attr
+
+        if '__name__'
+
+        for attr in (set(dir(target)) - _common_attr - set([target.__name__])):
+            print('subjective {} {}'.format(target, attr))
+            setattr(self, attr, _subjective_map(getattr(target, attr)))
+
+    def __call__(self, *args, **kwargs):
+        self.target(
+            map(_subjective_map, args),
+            zip(kwargs.keys(), map(_subjective_map, kwargs.values()))
+        )
 
 @memoize
 def _scrape_results(query):
