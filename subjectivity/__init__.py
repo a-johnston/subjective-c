@@ -21,7 +21,12 @@ def objective(o):
 
 
 class Subjective(object):
-    def __init__(self, name, target):
+    def __init__(self, target, name=None):
+        if not name:
+            try:
+                name = target.__name__
+            except:
+                name = target.__class__.__name__
         self.__dict__ = {
             'name': name,
             'target': target,
@@ -39,14 +44,17 @@ class Subjective(object):
         else:
             object.__setattr__(self.target, name, value)
 
-    def __int__(self):
-        return int(self.target)
-
     def __str__(self):
         return str(self.target)
 
     def __repr__(self):
         return repr(self.target)
+
+    def __getitem__(self, index):
+        return Subjective(self.target[index])
+
+    def __getslice__(self, i, j):
+        return Subjective(self.target[i:j])
 
     def __blob__(self):
         return get_basis_blob(self.name)
@@ -76,9 +84,6 @@ class Subjective(object):
     def __le__(self, other):
         return self < other or self == other
 
-    def __hash__(self):
-        return self.target.__hash__()
-
 
 def similarity(a, b):
     a = _get_as_blob(a)
@@ -99,3 +104,4 @@ def _get_as_blob(term):
 @memoize
 def get_basis_blob(term):
     return bodybuilder.build_basis(term)
+
