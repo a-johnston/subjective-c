@@ -2,6 +2,9 @@ import bodybuilder
 from textblob import TextBlob
 
 
+s = lambda name: Subjective(name, name)
+
+
 class memoize(dict):
     def __init__(self, func):
         self.func = func
