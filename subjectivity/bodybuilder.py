@@ -39,7 +39,7 @@ def get_top_blocks(url):
         )
 
         top_blocks = sorted(zip(map(lambda x: len(x), blocks), blocks))
-        top_blocks = map(lambda x: x[1], top_blocks[-len(blocks)/10])
+        top_blocks = map(lambda x: x[1], top_blocks[-len(top_blocks)/10:])
 
         return reduce(lambda a, b: a + b, top_blocks, '')
     except:
@@ -48,4 +48,4 @@ def get_top_blocks(url):
 
 def build_basis(term):
     urls = list(search('wiki ' + term, stop=10))
-    return TextBlob(' '.join([get_top_blocks(url) for url in urls]))
+    return TextBlob(' '.join([get_top_blocks(url) for url in urls]).strip())

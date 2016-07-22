@@ -65,6 +65,8 @@ class Subjective(object):
 
     def __score__(self):
         blob = self.__blob__()
+        if not blob.polarity or not blob.subjectivity:
+            return 0
         return blob.polarity / blob.subjectivity
 
     def __eq__(self, other):
