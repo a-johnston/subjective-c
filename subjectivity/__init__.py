@@ -42,6 +42,9 @@ class Subjective(object):
         else:
             object.__setattr__(self.target, name, value)
 
+    def __len__(self):
+        return len(self.target)
+
     def __str__(self):
         return str(self.target)
 

@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+from colored import fg, bg, attr
+import re
+import subjectivity
+
+_LINE = 0
+
+
+def _fix_for_sc(cmd):
+    return re.sub(
+            r'^\s*\$([\w\d]+)\s*=\s*(.+)',
+            r'\1 = subjectivity.Subjective(\2, "\1")',
+            cmd,
+    )
+
+
+def read():
+    global _LINE
+    _LINE += 1
+    cmd = str(raw_input('{}[{}]{} : '.format(fg(10), _LINE, attr(0))))
+    return _fix_for_sc(cmd)
+
+
+def _print_error(e):
+    print('{}{}[{}] : {}{}'.format(fg(16), bg(9), _LINE, e, attr(0)))
+
+
+def loop():
+    try:
+        while True:
+            line = read()
+            try:
+                out = eval(line)
+                print('{}[{}]{} : {}'.format(fg(9), _LINE, attr(0), out))
+            except SyntaxError:
+                try:
+                    exec(line)
+                except Exception as e:
+                    _print_error(e)
+            except Exception as e:
+                _print_error(e)
+    except KeyboardInterrupt:
+        pass
+
+
+if __name__ == '__main__':
+    print('-------------------------------')
+    print('|      Subjective-C 42.0.0     |')
+    print('-------------------------------')
+    loop()
