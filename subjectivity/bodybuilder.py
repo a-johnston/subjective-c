@@ -31,11 +31,15 @@ def sane_english(text):
 
 def get_top_blocks(url):
     try:
-        blocks = BeautifulSoup(requests.get(url).text, 'lxml').get_text().split('\n')
-        blocks = filter(lambda x: x, map(lambda x: sane_english(x), blocks))
+        blocks = BeautifulSoup(requests.get(url).text, 'lxml')
+        blocks = blocks.get_text().split('\n')
+        blocks = filter(
+            lambda x: x,
+            map(lambda x: sane_english(x), blocks)
+        )
 
-        top_blocks = sorted(zip(map(lambda x: len(x), blocks), blocks))[-(len(blocks)/10):]
-        top_blocks = map(lambda x: x[1], top_blocks)
+        top_blocks = sorted(zip(map(lambda x: len(x), blocks), blocks))
+        top_blocks = map(lambda x: x[1], top_blocks[-len(blocks)/10])
 
         return reduce(lambda a, b: a + b, top_blocks, '')
     except:
@@ -45,4 +49,3 @@ def get_top_blocks(url):
 def build_basis(term):
     urls = list(search('wiki ' + term, stop=10))
     return TextBlob(' '.join([get_top_blocks(url) for url in urls]))
-

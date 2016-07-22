@@ -2,7 +2,8 @@ import bodybuilder
 from textblob import TextBlob
 
 
-s = lambda name: Subjective(name, name)
+def s(name):
+    return Subjective(name, name)
 
 
 class memoize(dict):
@@ -92,10 +93,13 @@ def similarity(a, b):
     a = _get_as_blob(a)
     b = _get_as_blob(b)
 
-    intersection = sum(map(a.word_counts[x] + b.word_counts[x] for x in (set(a.words) & set(b.words))))
-    union = sum(map(a.word_counts[x] + b.word_counts[x] for x in (set(a.words) | set(b.words))))
+    intersect = set(a.words) & set(b.words)
+    union = set(a.words) | set(b.words)
 
-    return float(intersection) / float(union)
+    intersect = sum(a.word_counts[x] + b.word_counts[x] for x in intersect)
+    union = sum(a.word_counts[x] + b.word_counts[x] for x in union)
+
+    return float(intersect) / float(union)
 
 
 def _get_as_blob(term):
@@ -107,4 +111,3 @@ def _get_as_blob(term):
 @memoize
 def get_basis_blob(term):
     return bodybuilder.build_basis(term)
-
