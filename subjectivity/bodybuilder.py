@@ -4,6 +4,29 @@ import re
 import requests
 from textblob import TextBlob
 from textblob import Word
+from util import memoize
+
+
+class TermBasis():
+    def __init__(self, term):
+        self.term = term
+        self.__blob = None
+
+    @property
+    def blob(self):
+        if not self.__blob:
+            self.__blob = build_basis(self.term)
+        return self.__blob
+
+    @property
+    def score(self):
+        if not self.blob.polarity or not self.blob.subjectivity:
+            return 0.0
+        return self.blob.polarity / self.blob.subjectivity
+ 
+    @property
+    def keywords(self):
+        return []
 
 
 def sane_english(text):
@@ -46,6 +69,7 @@ def get_top_blocks(url):
         return ''
 
 
+@memoize
 def build_basis(term):
     urls = list(search('wiki ' + term, stop=10))
     return TextBlob(' '.join([get_top_blocks(url) for url in urls]).strip())

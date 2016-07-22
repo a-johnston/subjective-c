@@ -1,21 +1,9 @@
 import bodybuilder
-from textblob import TextBlob
+from util import memoize
 
 
 def s(name):
     return Subjective(name, name)
-
-
-class memoize(dict):
-    def __init__(self, func):
-        self.func = func
-
-    def __call__(self, *args):
-        return self[args]
-
-    def __missing__(self, key):
-        result = self[key] = self.func(*key)
-        return result
 
 
 def objective(o):
@@ -60,14 +48,11 @@ class Subjective(object):
     def __getslice__(self, i, j):
         return Subjective(self.target[i:j])
 
-    def __blob__(self):
-        return get_basis_blob(self.name)
+    def __basis__(self):
+        return get_term_basis(self.name)
 
     def __score__(self):
-        blob = self.__blob__()
-        if not blob.polarity or not blob.subjectivity:
-            return 0
-        return blob.polarity / blob.subjectivity
+        return self.__basis__().score
 
     def __eq__(self, other):
         if isinstance(other, Subjective):
@@ -92,8 +77,8 @@ class Subjective(object):
 
 
 def similarity(a, b):
-    a = _get_as_blob(a)
-    b = _get_as_blob(b)
+    a = _get_as_basis(a).blob
+    b = _get_as_basis(b).blob
 
     intersect = set(a.words) & set(b.words)
     union = set(a.words) | set(b.words)
@@ -104,12 +89,12 @@ def similarity(a, b):
     return float(intersect) / float(union)
 
 
-def _get_as_blob(term):
-    if isinstance(term, TextBlob):
+def _get_as_basis(term):
+    if isinstance(term, bodybuilder.TermBasis):
         return term
-    return get_basis_blob(term)
+    return get_term_basis(term)
 
 
 @memoize
-def get_basis_blob(term):
-    return bodybuilder.build_basis(term)
+def get_term_basis(term):
+    return bodybuilder.TermBasis(term)
