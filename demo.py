@@ -23,8 +23,8 @@ apple = Apple()
 orange = Orange()
 
 print('Comparing cats and dogs')
-print('cat > dog : %s' % cat > dog)
+print('cat > dog : %s' % (cat > dog))
 
 print('Comparing apples and oranges')
-print('apple > orange : %s' % apple > orange)
+print('apple > orange : %s' % (apple > orange))
 
