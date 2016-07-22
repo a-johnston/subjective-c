@@ -44,7 +44,8 @@ def loop():
 
 
 if __name__ == '__main__':
-    print('-------------------------------')
-    print('|      Subjective-C 42.0.0     |')
-    print('-------------------------------')
+    print('.-------------------------------.')
+    print('|       Subjective-C 42.0.0     |')
+    print('|  Adam Johnston : Yelp Hack 20 |')
+    print('*-------------------------------*')
     loop()
