@@ -4,6 +4,7 @@ import re
 import requests
 from textblob import TextBlob
 from textblob import Word
+from util import get_keywords
 from util import memoize
 
 
@@ -23,10 +24,10 @@ class TermBasis():
         if not self.blob.polarity or not self.blob.subjectivity:
             return 0.0
         return self.blob.polarity / self.blob.subjectivity
- 
+
     @property
     def keywords(self):
-        return []
+        return get_keywords(self)
 
 
 def sane_english(text):

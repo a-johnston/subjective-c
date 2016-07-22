@@ -1,6 +1,8 @@
 import bodybuilder
 from util import memoize
 
+_HALF_PERCENT = 0.005
+
 
 def s(name):
     return Subjective(name, name)
@@ -23,6 +25,10 @@ class Subjective(object):
             'name': name,
             'target': target,
         }
+
+    @property
+    def keywords(self):
+        return self.__basis__().keywords
 
     def __call__(self, *args, **kwargs):
         return Subjective(self.target(*args, **kwargs))
@@ -56,17 +62,17 @@ class Subjective(object):
 
     def __eq__(self, other):
         if isinstance(other, Subjective):
-            return (abs(self.__score__() - other.__score__()) < 0.005)
+            return (abs(self.__score__() - other.__score__()) <= _HALF_PERCENT)
         return self.target == other
 
     def __gt__(self, other):
         if isinstance(other, Subjective):
-            return self.__score__() > other.__score__()
+            return self.__score__() > (other.__score__() + _HALF_PERCENT)
         return self.target > other
 
     def __lt__(self, other):
         if isinstance(other, Subjective):
-            return self.__score__() < other.__score__()
+            return self.__score__() < (other.__score__() - _HALF_PERCENT)
         return self.target < other
 
     def __ge__(self, other):

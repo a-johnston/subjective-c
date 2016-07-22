@@ -1,4 +1,5 @@
 import statistics
+from textblob import TextBlob
 
 __COMMON_WORDS = None
 
@@ -15,11 +16,17 @@ class memoize(dict):
         return result
 
 
+@memoize
 def get_keywords(word_counts, num_keywords=10):
-    if not isinstance(word_counts, dict):
+    if hasattr(word_counts, 'blob'):
+        word_counts = word_counts.blob.word_counts
+    elif isinstance(word_counts, TextBlob):
         word_counts = word_counts.word_counts
 
-    word_counts = [(pair[1] * cheap_idf(pair[0]), pair[0]) for pair in word_counts.items()]
+    if isinstance(word_counts, dict):
+        word_counts = word_counts.items()
+
+    word_counts = [(p[1] * cheap_idf(p[0]), p[0]) for p in word_counts]
 
     counts = [x[0] for x in word_counts]
     mean = statistics.mean(counts)

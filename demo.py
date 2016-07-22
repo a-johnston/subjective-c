@@ -1,30 +1,14 @@
-from subjectivity import Subjective
+$cat = 1
+$dog = 4
 
-@Subjective
-class Cat:
-    pass
+$apple = 'hack the planet'
+$orange = object()
 
-@Subjective
-class Dog:
-    pass
-
-@Subjective
-class Apple:
-    pass
-
-@Subjective
-class Orange:
-    pass
-
-cat = Cat()
-dog = Dog()
-
-apple = Apple()
-orange = Orange()
+print('Getting dog keywords')
+print(str(dog.keywords) + '\n')
 
 print('Comparing cats and dogs')
-print('cat > dog : %s' % (cat > dog))
+print('cat > dog : %s\n' % (cat > dog))
 
 print('Comparing apples and oranges')
-print('apple > orange : %s' % (apple > orange))
-
+print('apple < orange : %s\n' % (apple < orange))
